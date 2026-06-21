@@ -2,7 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Lista de 15 productos
+# Lista completa de 15 productos
 productos = [
     {'id': 1, 'nombre': 'Cámara Kodak Vintage', 'precio': 35.5, 'tipo': 'Coleccionable'},
     {'id': 2, 'nombre': 'Consola Retro 8-bit', 'precio': 51.0, 'tipo': 'Tecnología'},
