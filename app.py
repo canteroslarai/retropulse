@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 
 app = Flask(__name__)
+app.secret_key = 'mi_clave_secreta_super_segura_para_el_carrito'
 
 # Nuestra "Base de Datos" con 15 productos vintage y retro
 lista_productos = [
