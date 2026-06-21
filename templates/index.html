@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
-<body>
-    <div class="header"><h1>RETROPULSE</h1> <a href="/carrito">🛒 Carrito</a></div>
-    <div class="grid">
-        {% for p in productos %}
-        <div class="card">
-            <h3>{{ p.nombre }}</h3>
-            <p>${{ p.precio }}</p>
-            <a href="/detalle/{{ p.id }}">🔍 Ver más</a>
-            <form action="/agregar/{{ p.id }}" method="POST" style="margin-top:10px;">
-                <button class="btn">Comprar</button>
-            </form>
-        </div>
-        {% endfor %}
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<header class="hero">
+    <h1>Revive la era dorada</h1>
+    <a href="/tienda" class="btn">Explorar Catálogo</a>
+</header>
+<section class="grid">
+    {% for p in destacados %}
+    <div class="card"><img src="{{ p.img }}"><h3>{{ p.nombre }}</h3></div>
+    {% endfor %}
+</section>
+{% endblock %}

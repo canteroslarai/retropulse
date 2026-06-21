@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="margin: 40px auto; max-width: 600px;">
+    <img src="{{ p.img }}" style="width: 100%; border-radius: 10px;">
+    <h1>{{ p.nombre }}</h1>
+    <p style="font-size: 24px; color: var(--neon);">${{ p.precio }}</p>
+    <p>{{ p.desc }}</p>
+    <form action="/carrito" method="POST">
+        <input type="hidden" name="id" value="{{ p.id }}">
+        <button class="btn" style="width: 100%;">Añadir al Carrito</button>
+    </form>
+</div>
+{% endblock %}

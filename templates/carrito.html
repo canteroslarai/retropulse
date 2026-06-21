@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
-<body>
-    <div class="header"><h1>Tu Carrito</h1> <a href="/">⬅ Seguir comprando</a></div>
-    <div style="padding: 20px;">
-        {% for item in items %}
-            <div class="card" style="margin-bottom:10px;">{{ item.nombre }} (x{{ item.cant }}) - ${{ item.precio * item.cant }}</div>
-        {% endfor %}
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div style="padding: 40px;">
+    <h1>Tu Carrito</h1>
+    {% for item in items %}
+        <div class="card" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span>{{ item.nombre }} (x{{ item.cant }})</span>
+            <span>${{ item.precio * item.cant }}</span>
+        </div>
+    {% endfor %}
+    <h2 style="color: var(--neon);">Total: ${{ total }}</h2>
+    <a href="/checkout" class="btn" style="background: var(--neon); color: black;">Finalizar Compra</a>
+</div>
+{% endblock %}

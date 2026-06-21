@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="margin: 40px auto; max-width: 500px; padding: 30px;">
+    <h1>Finalizar Compra</h1>
+    <form method="POST">
+        <input type="text" placeholder="Nombre completo" required style="width: 100%; margin-bottom: 10px; padding: 10px;">
+        <input type="text" placeholder="Dirección de envío" required style="width: 100%; margin-bottom: 10px; padding: 10px;">
+        <select style="width: 100%; margin-bottom: 20px; padding: 10px;">
+            <option>Tarjeta de Crédito</option>
+            <option>Transferencia Bancaria</option>
+            <option>Mercado Pago</option>
+        </select>
+        <button type="submit" class="btn" style="width: 100%;">CONFIRMAR PAGO</button>
+    </form>
+</div>
+{% endblock %}
