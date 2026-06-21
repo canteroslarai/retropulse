@@ -1,12 +1,18 @@
-{% extends "base.html" %}
-{% block content %}
-<header class="hero">
-    <h1>Revive la era dorada</h1>
-    <a href="/tienda" class="btn">Explorar Catálogo</a>
-</header>
-<section class="grid">
-    {% for p in destacados %}
-    <div class="card"><img src="{{ p.img }}"><h3>{{ p.nombre }}</h3></div>
-    {% endfor %}
-</section>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>RetroPulse - Tienda</h1>
+    <a href="/carrito">Ver Carrito</a>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        {% for p in productos %}
+        <div style="border: 1px solid #ccc; padding: 10px;">
+            <h3>{{ p.nombre }}</h3>
+            <p>${{ p.precio }}</p>
+            <form action="/agregar/{{ p.id }}" method="POST">
+                <button type="submit">Comprar</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
