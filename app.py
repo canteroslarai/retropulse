@@ -175,6 +175,16 @@ lista_productos = [
 def home():
     # Ahora le enviamos la LISTA COMPLETA de productos al HTML
     return render_template('producto.html', productos=lista_productos)
-
+@app.route('/procesar-compra', methods=['POST'])
+def procesar_compra():
+    # Recibimos los datos del formulario y los productos seleccionados
+    datos = request.json
+    nombre_cliente = datos.get('nombre')
+    productos_carrito = datos.get('carrito')
+    
+    # Aquí puedes añadir la lógica para guardar la orden en tu base de datos
+    print(f"Nueva compra de: {nombre_cliente}, Productos: {productos_carrito}")
+    
+    return jsonify({"mensaje": "Compra recibida con éxito"}), 200
 if __name__ == '__main__':
     app.run(debug=True)
