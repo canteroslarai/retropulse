@@ -48,5 +48,10 @@ def checkout():
         return "<h1>¡Gracias por tu compra! Tu pedido está en camino.</h1><a href='/'>Volver al inicio</a>"
     return render_template('checkout.html')
 
+import os
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Render asigna automáticamente un puerto dinámico en la variable de entorno PORT
+    port = int(os.environ.get("PORT", 5000))
+    # '0.0.0.0' le dice a Flask que sea accesible externamente
+    app.run(host="0.0.0.0", port=port)
