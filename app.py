@@ -1,32 +1,89 @@
-from flask import Flask, render_template, redirect, url_for, session
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
-app.secret_key = 'retropulse_secret'
 
-# Registro principal de 30 productos
-PRODUCTOS = {i: {
-    "id": i, 
-    "nombre": f"Producto Retro {i}", 
-    "precio": 5000 + (i * 100), 
-    "descripcion": "Un artículo clásico de colección."
-} for i in range(1, 31)}
+# Registro principal de productos
+# Clave primaria: ID_PRODUCTO
 
-@app.route('/')
-def index():
-    return render_template('index.html', productos=PRODUCTOS.values())
+productos = [
+    {
+        "id": 1,
+        "nombre": "Consola Sega Mega Drive",
+        "categoria": "Videojuegos Retro",
+        "precio": 85000,
+        "stock": 4,
+        "descripcion": "Consola clásica de los años 90"
+    },
 
-@app.route('/agregar/<int:id>', methods=['POST'])
-def agregar(id):
-    if 'carrito' not in session: session['carrito'] = []
-    session['carrito'].append(PRODUCTOS[id])
-    session.modified = True
-    return redirect(url_for('ver_carrito'))
+    {
+        "id": 2,
+        "nombre": "Cámara Polaroid Vintage",
+        "categoria": "Coleccionables",
+        "precio": 60000,
+        "stock": 3,
+        "descripcion": "Cámara instantánea antigua restaurada"
+    },
 
-@app.route('/carrito')
-def ver_carrito():
-    items = session.get('carrito', [])
-    total = sum(p['precio'] for p in items)
-    return render_template('carrito.html', items=items, total=total)
+    {
+        "id": 3,
+        "nombre": "Walkman Sony Original",
+        "categoria": "Tecnología Retro",
+        "precio": 45000,
+        "stock": 6,
+        "descripcion": "Reproductor portátil clásico"
+    }
+]
 
-if __name__ == '__main__':
+
+# Página principal
+@app.route("/")
+def inicio():
+    return render_template("index.html", productos=productos)
+
+
+# Registrar producto nuevo
+@app.route("/registrar", methods=["POST"])
+def registrar():
+
+    nuevo_producto = {
+
+        "id": len(productos) + 1,
+
+        "nombre": request.form["nombre"],
+
+        "categoria": request.form["categoria"],
+
+        "precio": request.form["precio"],
+
+        "stock": request.form["stock"],
+
+        "descripcion": request.form["descripcion"]
+    }
+
+
+    productos.append(nuevo_producto)
+
+
+    return redirect("/")
+
+
+
+# Eliminar producto
+@app.route("/eliminar/<int:id>")
+def eliminar(id):
+
+    for producto in productos:
+
+        if producto["id"] == id:
+
+            productos.remove(producto)
+
+            break
+
+
+    return redirect("/")
+
+
+
+if __name__ == "__main__":
     app.run(debug=True)
