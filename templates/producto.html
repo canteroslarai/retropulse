@@ -26,7 +26,6 @@
             text-shadow: 0 0 10px rgba(255, 223, 0, 0.6);
             margin-bottom: 40px;
         }
-        /* Contenedor en cuadrícula para los 15 productos */
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -93,13 +92,7 @@
         .btn-buy:hover { background-color: #9d4edd; }
     </style>
 </head>
-<div class="price-section">
-    <span class="price">${{ producto.precio }}</span>
-    
-    <button class="btn-buy" onclick="agregarAlCarrito('{{ producto.nombre }}', {{ producto.precio }})">
-        Agregar al carrito
-    </button>
-</div>
+<body>
 
     <h1 class="main-title">🕹️ Catálogo RetroPulse 🕹️</h1>
 
@@ -123,54 +116,53 @@
 
                 <div class="price-section">
                     <span class="price">${{ producto.precio }}</span>
-                    <button class="btn-buy">Comprar ({{ producto.stock }})</button>
+                    <button class="btn-buy" onclick="agregarAlCarrito('{{ producto.nombre }}', {{ producto.precio }})">
+                        Agregar al carrito
+                    </button>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
-<div id="carrito-flotante" style="position:fixed; top:20px; right:20px; background:#16213e; padding:15px; border-radius:10px; border: 2px solid #8a2be2; color:#fff; z-index: 1000;">
-    <h3>🛒 Tu Carrito</h3>
-    <ul id="lista-carrito" style="list-style: none; padding: 0;"></ul>
-    <button onclick="document.getElementById('formulario-compra').style.display='block'" class="btn-buy" style="width: 100%;">Finalizar Compra</button>
-</div>
 
-<div id="formulario-compra" style="display:none; position:fixed; top:15%; left:25%; width: 50%; background:#1a1a2e; padding:40px; border:2px solid #ffdf00; border-radius: 12px; z-index: 2000;">
-    <h2 style="color:#ffdf00; text-align: center;">Datos de Envío</h2>
-    <input type="text" id="nombre" placeholder="Nombre completo" style="width: 100%; padding: 10px; margin-bottom: 10px;"><br>
-    <input type="email" id="email" placeholder="Correo electrónico" style="width: 100%; padding: 10px; margin-bottom: 20px;"><br>
-    <button onclick="enviarCompra()" class="btn-buy" style="width: 100%;">Confirmar Pago</button>
-    <button onclick="document.getElementById('formulario-compra').style.display='none'" style="width: 100%; margin-top: 10px; background: #666; color: white; border: none; padding: 10px;">Cancelar</button>
-</div>
-</body>
-<script>
-let carrito = [];
+    <div id="carrito-flotante" style="position:fixed; top:20px; right:20px; background:#16213e; padding:15px; border-radius:10px; border: 2px solid #8a2be2; color:#fff; z-index: 1000;">
+        <h3>🛒 Tu Carrito</h3>
+        <ul id="lista-carrito" style="list-style: none; padding: 0;"></ul>
+        <button onclick="document.getElementById('formulario-compra').style.display='block'" class="btn-buy" style="width: 100%;">Finalizar Compra</button>
+    </div>
 
-function agregarAlCarrito(nombre, precio) {
-    carrito.push({nombre, precio});
-    actualizarCarrito();
-    alert(nombre + " agregado al carrito.");
-}
+    <div id="formulario-compra" style="display:none; position:fixed; top:15%; left:25%; width: 50%; background:#1a1a2e; padding:40px; border:2px solid #ffdf00; border-radius: 12px; z-index: 2000;">
+        <h2 style="color:#ffdf00; text-align: center;">Datos de Envío</h2>
+        <input type="text" id="nombre" placeholder="Nombre completo" style="width: 100%; padding: 10px; margin-bottom: 10px;"><br>
+        <button onclick="enviarCompra()" class="btn-buy" style="width: 100%;">Confirmar Pago</button>
+        <button onclick="document.getElementById('formulario-compra').style.display='none'" style="width: 100%; margin-top: 10px; background: #666; color: white; border: none; padding: 10px;">Cancelar</button>
+    </div>
 
-function actualizarCarrito() {
-    const lista = document.getElementById('lista-carrito');
-    lista.innerHTML = carrito.map(item => `<li>${item.nombre} - $${item.precio}</li>`).join('');
-}
-
-function enviarCompra() {
-    const nombre = document.getElementById('nombre').value;
-    fetch('/procesar-compra', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({nombre: nombre, carrito: carrito})
-    }).then(response => response.json())
-      .then(data => {
-          alert("¡Gracias " + nombre + "! " + data.mensaje);
-          document.getElementById('formulario-compra').style.display = 'none';
-          carrito = [];
-          actualizarCarrito();
-      });
-}
-</script>
+    <script>
+        let carrito = [];
+        function agregarAlCarrito(nombre, precio) {
+            carrito.push({nombre, precio});
+            actualizarCarrito();
+            alert(nombre + " agregado al carrito.");
+        }
+        function actualizarCarrito() {
+            const lista = document.getElementById('lista-carrito');
+            lista.innerHTML = carrito.map(item => `<li>${item.nombre} - $${item.precio}</li>`).join('');
+        }
+        function enviarCompra() {
+            const nombre = document.getElementById('nombre').value;
+            fetch('/procesar-compra', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({nombre: nombre, carrito: carrito})
+            }).then(response => response.json())
+              .then(data => {
+                  alert("¡Compra exitosa! Gracias, " + nombre);
+                  document.getElementById('formulario-compra').style.display = 'none';
+                  carrito = [];
+                  actualizarCarrito();
+              });
+        }
+    </script>
 </body>
 </html>
