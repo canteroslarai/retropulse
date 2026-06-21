@@ -10,12 +10,15 @@
     <hr style="border-color: #444; margin: 20px 0;">
     
     <h1 style="color: #fff;">📋 Características del Producto</h1>
-    <h2 style="color: #ff0055; margin-bottom: 5px;">{{ producto.nombre }}</h2>
+    
+    <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; border: 2px solid #ff0055; margin-bottom: 15px;">
+    
+    <h2 style="color: #ff0055; margin: 0;">{{ producto.nombre }}</h2>
     <p style="font-size: 24px; color: #00ffcc; font-weight: bold; margin-top: 5px;">Precio: ${{ producto.precio }}</p>
     
     <div style="background-color: #2a2a2a; padding: 20px; border-radius: 8px; border: 1px solid #444; margin: 20px 0;">
         <h3 style="margin-top: 0; color: #aaa;">Descripción Técnica:</h3>
-        <p style="line-height: 1.6; color: #ddd;">{{ producto.descripcion }}</p>
+        <p style="line-height: 1.6; color: #ddd; margin-bottom: 0;">{{ producto.descripcion }}</p>
     </div>
     
     <form action="{{ url_for('agregar_al_carrito', id_producto=producto.id) }}" method="POST">
