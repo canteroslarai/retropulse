@@ -1,89 +1,29 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Registro principal de productos
-# Clave primaria: ID_PRODUCTO
-
+# Lista de 15 productos
 productos = [
-    {
-        "id": 1,
-        "nombre": "Consola Sega Mega Drive",
-        "categoria": "Videojuegos Retro",
-        "precio": 85000,
-        "stock": 4,
-        "descripcion": "Consola clásica de los años 90"
-    },
-
-    {
-        "id": 2,
-        "nombre": "Cámara Polaroid Vintage",
-        "categoria": "Coleccionables",
-        "precio": 60000,
-        "stock": 3,
-        "descripcion": "Cámara instantánea antigua restaurada"
-    },
-
-    {
-        "id": 3,
-        "nombre": "Walkman Sony Original",
-        "categoria": "Tecnología Retro",
-        "precio": 45000,
-        "stock": 6,
-        "descripcion": "Reproductor portátil clásico"
-    }
+    {'id': 1, 'nombre': 'Cámara Kodak Vintage', 'precio': 35.5, 'tipo': 'Coleccionable'},
+    {'id': 2, 'nombre': 'Consola Retro 8-bit', 'precio': 51.0, 'tipo': 'Tecnología'},
+    {'id': 3, 'nombre': 'Vinilo de Jazz 1960', 'precio': 66.5, 'tipo': 'Coleccionable'},
+    {'id': 4, 'nombre': 'Walkman Sony Original', 'precio': 82.0, 'tipo': 'Tecnología'},
+    {'id': 5, 'nombre': 'Teléfono de Disco', 'precio': 97.5, 'tipo': 'Coleccionable'},
+    {'id': 6, 'nombre': 'Calculadora Casio Retro', 'precio': 113.0, 'tipo': 'Tecnología'},
+    {'id': 7, 'nombre': 'Reloj de Bolsillo', 'precio': 128.5, 'tipo': 'Coleccionable'},
+    {'id': 8, 'nombre': 'Joystick Arcade', 'precio': 144.0, 'tipo': 'Tecnología'},
+    {'id': 9, 'nombre': 'Posters Vintage', 'precio': 159.5, 'tipo': 'Coleccionable'},
+    {'id': 10, 'nombre': 'Radio Transistor', 'precio': 175.0, 'tipo': 'Tecnología'},
+    {'id': 11, 'nombre': 'Máquina de escribir', 'precio': 190.5, 'tipo': 'Coleccionable'},
+    {'id': 12, 'nombre': 'Monitor CRT Retro', 'precio': 206.0, 'tipo': 'Tecnología'},
+    {'id': 13, 'nombre': 'Lámpara Art Deco', 'precio': 221.5, 'tipo': 'Coleccionable'},
+    {'id': 14, 'nombre': 'Teclado Mecánico Retro', 'precio': 237.0, 'tipo': 'Tecnología'},
+    {'id': 15, 'nombre': 'Juego de mesa 1970', 'precio': 252.5, 'tipo': 'Coleccionable'}
 ]
 
+@app.route('/')
+def index():
+    return render_template('index.html', productos=productos)
 
-# Página principal
-@app.route("/")
-def inicio():
-    return render_template("index.html", productos=productos)
-
-
-# Registrar producto nuevo
-@app.route("/registrar", methods=["POST"])
-def registrar():
-
-    nuevo_producto = {
-
-        "id": len(productos) + 1,
-
-        "nombre": request.form["nombre"],
-
-        "categoria": request.form["categoria"],
-
-        "precio": request.form["precio"],
-
-        "stock": request.form["stock"],
-
-        "descripcion": request.form["descripcion"]
-    }
-
-
-    productos.append(nuevo_producto)
-
-
-    return redirect("/")
-
-
-
-# Eliminar producto
-@app.route("/eliminar/<int:id>")
-def eliminar(id):
-
-    for producto in productos:
-
-        if producto["id"] == id:
-
-            productos.remove(producto)
-
-            break
-
-
-    return redirect("/")
-
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
