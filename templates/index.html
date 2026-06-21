@@ -2,53 +2,127 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>RetroVault Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroPulse - Catálogo Completo</title>
     <style>
-        body { 
-            font-family: 'Courier New', monospace; 
-            background-color: #f4f1ea; 
-            padding: 20px; 
-            color: #333;
+        :root {
+            --neon-purple: #8a2be2;
+            --retro-yellow: #ffdf00;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-color: #ffffff;
         }
-        h1 { 
-            text-align: center; 
-            border-bottom: 2px solid #333; 
-            padding-bottom: 10px;
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0; padding: 40px 20px;
         }
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 20px; 
-            margin-top: 20px;
+        h1.main-title {
+            text-align: center;
+            color: var(--retro-yellow);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 223, 0, 0.6);
+            margin-bottom: 40px;
         }
-        .card { 
-            border: 2px solid #333; 
-            padding: 15px; 
-            background: white; 
-            text-align: center; 
-            transition: transform 0.2s;
+        /* Contenedor en cuadrícula para los 15 productos */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .card:hover { 
-            transform: scale(1.05); 
-            background-color: #fffaf0;
+        .product-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--neon-purple);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
-        .price { 
-            font-weight: bold; 
-            color: #8b4513; 
-            font-size: 1.2em;
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
         }
+        .product-image {
+            background-color: #0f172a;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .badge {
+            background-color: var(--retro-yellow);
+            color: #000;
+            padding: 3px 8px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            align-self: flex-start;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        h2 { margin: 0 0 10px 0; font-size: 1.4rem; color: #fff; }
+        .meta-info { font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px; }
+        .meta-info span { margin-right: 10px; }
+        .description { font-size: 0.95rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 15px; flex-grow: 1; }
+        .price-section { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+        .price { font-size: 1.6rem; font-weight: bold; color: var(--retro-yellow); }
+        .btn-buy {
+            background-color: var(--neon-purple);
+            color: white; border: none; padding: 10px 18px;
+            font-size: 0.9rem; font-weight: bold; border-radius: 6px;
+            cursor: pointer; transition: background 0.3s ease;
+        }
+        .btn-buy:hover { background-color: #9d4edd; }
     </style>
 </head>
 <body>
-    <h1>RetroVault: Catálogo de Tesoros</h1>
-    <div class="grid">
-        {% for p in productos %}
-            <div class="card">
-                <h3>{{ p.nombre }}</h3>
-                <p>Categoría: {{ p.tipo }}</p>
-                <p class="price">${{ p.precio }}</p>
+
+    <h1 class="main-title">🕹️ Catálogo RetroPulse 🕹️</h1>
+
+    <div class="catalog-grid">
+        {% for producto in productos %}
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}">
             </div>
+            <div class="product-details">
+                <span class="badge">{{ producto.estado_conservacion }}</span>
+                <h2>{{ producto.nombre }}</h2>
+                
+                <div class="meta-info">
+                    <span><strong>ID:</strong> {{ producto.id_producto }}</span>
+                    <span><strong>Año:</strong> {{ producto.anio_fabricacion }}</span>
+                    <span><strong>Cat:</strong> {{ producto.categoria }}</span>
+                </div>
+                
+                <p class="description">{{ producto.descripcion }}</p>
+
+                <div class="price-section">
+                    <span class="price">${{ producto.precio }}</span>
+                    <button class="btn-buy">Comprar ({{ producto.stock }})</button>
+                </div>
+            </div>
+        </div>
         {% endfor %}
     </div>
+
 </body>
 </html>
