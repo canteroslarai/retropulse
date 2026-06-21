@@ -1,184 +1,68 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, render_template, redirect, url_for, session, flash
 
 app = Flask(__name__)
-app.secret_key = 'mi_clave_secreta_super_segura_para_el_carrito'
+app.secret_key = 'retropulse_secret_key_2026'
 
-# Nuestra "Base de Datos" con 15 productos vintage y retro
-lista_productos = [
-    {
-        "id_producto": "RETRO-001",
-        "nombre": "Game Boy Color (Berry)",
-        "categoria": "Consolas",
-        "anio_fabricacion": 1998,
-        "estado_conservacion": "Como nuevo (Mint)",
-        "precio": 120.00,
-        "stock": 1,
-        "descripcion": "Consola portátil original en edición Berry. Limpieza interna completa.",
-        "imagen_url": "https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?w=400"
-    },
-    {
-        "id_producto": "RETRO-002",
-        "nombre": "Cámara Polaroid Sun 600",
-        "categoria": "Fotografía",
-        "anio_fabricacion": 1983,
-        "estado_conservacion": "Buen estado",
-        "precio": 85.00,
-        "stock": 1,
-        "descripcion": "Cámara instantánea clásica. Probada y funcionando con cartuchos e-600.",
-        "imagen_url": "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400"
-    },
-    {
-        "id_producto": "RETRO-003",
-        "nombre": "Vinilo Michael Jackson - Thriller",
-        "categoria": "Música",
-        "anio_fabricacion": 1982,
-        "estado_conservacion": "Excelente (VG+)",
-        "precio": 45.00,
-        "stock": 2,
-        "descripcion": "Primera edición estadounidense. Incluye el insert original con letras.",
-        "imagen_url": "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400"
-    },
-    {
-        "id_producto": "RETRO-004",
-        "nombre": "Sega Genesis / Mega Drive",
-        "categoria": "Consolas",
-        "anio_fabricacion": 1989,
-        "estado_conservacion": "Detalles estéticos",
-        "precio": 95.00,
-        "stock": 1,
-        "descripcion": "Modelo 1 original. Incluye transformador, cable RCA y un joystick de 3 botones.",
-        "imagen_url": "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400"
-    },
-    {
-        "id_producto": "RETRO-005",
-        "nombre": "Walkman Sony WM-F22",
-        "categoria": "Audio",
-        "anio_fabricacion": 1986,
-        "estado_conservacion": "Para repuestos",
-        "precio": 30.00,
-        "stock": 1,
-        "descripcion": "Estéticamente hermoso pero requiere cambio de correas internas. No reproduce.",
-        "imagen_url": "https://images.unsplash.com/photo-1611002214175-92576b92a2a1?w=400"
-    },
-    {
-        "id_producto": "RETRO-006",
-        "nombre": "Cartucho Super Mario World (SNES)",
-        "categoria": "Videojuegos",
-        "anio_fabricacion": 1990,
-        "estado_conservacion": "Buen estado",
-        "precio": 40.00,
-        "stock": 3,
-        "descripcion": "Cartucho original para Super Nintendo. Placa limpia y contactos pulidos.",
-        "imagen_url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400"
-    },
-    {
-        "id_producto": "RETRO-007",
-        "nombre": "Computadora Commodore 64",
-        "categoria": "Computación",
-        "anio_fabricacion": 1982,
-        "estado_conservacion": "Como nuevo (Mint)",
-        "precio": 250.00,
-        "stock": 1,
-        "descripcion": "En caja original con manuales. Una pieza de museo perfectamente funcional.",
-        "imagen_url": "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=400"
-    },
-    {
-        "id_producto": "RETRO-008",
-        "nombre": "Consola Nintendo NES",
-        "categoria": "Consolas",
-        "anio_fabricacion": 1985,
-        "estado_conservacion": "Buen estado",
-        "precio": 130.00,
-        "stock": 1,
-        "descripcion": "Lanzamiento americano. Mantenimiento de pinera de 72 pines recién hecho.",
-        "imagen_url": "https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?w=400"
-    },
-    {
-        "id_producto": "RETRO-009",
-        "nombre": "Cámara Réflex Canon AE-1",
-        "categoria": "Fotografía",
-        "anio_fabricacion": 1976,
-        "estado_conservacion": "Excelente (VG+)",
-        "precio": 180.00,
-        "stock": 1,
-        "descripcion": "Cuerpo e incluye lente de 50mm f/1.8. Fotómetro funcionando con pila nueva.",
-        "imagen_url": "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?w=400"
-    },
-    {
-        "id_producto": "RETRO-010",
-        "nombre": "Disquete de instalación Windows 95",
-        "categoria": "Computación",
-        "anio_fabricacion": 1995,
-        "estado_conservacion": "Detalles estéticos",
-        "precio": 15.00,
-        "stock": 5,
-        "descripcion": "Set de disquetes de 3.5 pulgadas originales para nostálgicos del software.",
-        "imagen_url": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400"
-    },
-    {
-        "id_producto": "RETRO-011",
-        "nombre": "Reloj Casio F-91W Original",
-        "categoria": "Accesorios",
-        "anio_fabricacion": 1989,
-        "estado_conservacion": "Como nuevo (Mint)",
-        "precio": 25.00,
-        "stock": 4,
-        "descripcion": "El clásico reloj digital indestructible. Edición japonesa original.",
-        "imagen_url": "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=400"
-    },
-    {
-        "id_producto": "RETRO-012",
-        "nombre": "Tamagotchi Original Bandai",
-        "categoria": "Juguetes",
-        "anio_fabricacion": 1996,
-        "estado_conservacion": "Buen estado",
-        "precio": 50.00,
-        "stock": 1,
-        "descripcion": "Color carcasa azul translúcido. Con pila nueva incluida, listo para criar.",
-        "imagen_url": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400"
-    },
-    {
-        "id_producto": "RETRO-013",
-        "nombre": "Sega Dreamcast",
-        "categoria": "Consolas",
-        "anio_fabricacion": 1999,
-        "estado_conservacion": "Excelente (VG+)",
-        "precio": 160.00,
-        "stock": 1,
-        "descripcion": "Lee copias y originales. Incluyen Visual Memory Unit (VMU) y cables.",
-        "imagen_url": "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400"
-    },
-    {
-        "id_producto": "RETRO-014",
-        "nombre": "Televisor de Tubo (CRT) Sony Trinitron",
-        "categoria": "Tecnología",
-        "anio_fabricacion": 1992,
-        "estado_conservacion": "Buen estado",
-        "precio": 110.00,
-        "stock": 1,
-        "descripcion": "Pantalla de 14 pulgadas. Ideal para conectar consolas retro sin lag y con scanlines.",
-        "imagen_url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400"
-    },
-    {
-        "id_producto": "RETRO-015",
-        "nombre": "Casete Iron Maiden - The Number of the Beast",
-        "categoria": "Música",
-        "anio_fabricacion": 1982,
-        "estado_conservacion": "Detalles estéticos",
-        "precio": 20.00,
-        "stock": 1,
-        "descripcion": "Cinta en perfecto estado de reproducción. Carátula con leve desgaste por los años.",
-        "imagen_url": "https://images.unsplash.com/photo-1611002214175-92576b92a2a1?w=400"
-    }
-]
+# Catálogo completo de 15 productos para RetroPulse
+PRODUCTOS = {
+    1: {"id": 1, "nombre": "Consola Retro Classic X", "precio": 45000, "descripcion": "Consola con más de 10.000 juegos clásicos de los 90. Incluye dos mandos inalámbricos y conexión HDMI.", "imagen": "consola.jpg"},
+    2: {"id": 2, "nombre": "Gamepad Pro Wireless", "precio": 18000, "descripcion": "Control inalámbrico ergonómico de alta precisión compatible con PC, Android y consolas retro.", "imagen": "gamepad.jpg"},
+    3: {"id": 3, "nombre": "Cartucho Legendario 99-en-1", "precio": 12000, "descripcion": "El mítico cartucho con los mejores éxitos de la época dorada de los videojuegos de 8 y 16 bits.", "imagen": "cartucho.jpg"},
+    4: {"id": 4, "nombre": "Consola Portátil Pocket", "precio": 35000, "descripcion": "Pantalla IPS de 3.5 pulgadas para llevar tus emuladores favoritos (GameBoy, Megadrive) a todos lados.", "imagen": "portatil.jpg"},
+    5: {"id": 5, "nombre": "Lámpara LED Pac-Man Pixel", "precio": 9500, "descripcion": "Lámpara decorativa pixelada con modo sensible al sonido que reacciona al ritmo de tu música.", "imagen": "lampara.jpg"},
+    6: {"id": 6, "nombre": "Llavero Metálico Arcade", "precio": 2500, "descripcion": "Llavero premium de metal con la forma detallada de una máquina de fichines clásica de los 80.", "imagen": "llavero.jpg"},
+    7: {"id": 7, "nombre": "Mouse Pad Gamer Retro", "precio": 7500, "descripcion": "Mouse pad tamaño extra largo con diseño retro-wave ideal para setup de diseño o gaming.", "imagen": "mousepad.jpg"},
+    8: {"id": 8, "nombre": "Auriculares Retro Sound", "precio": 22000, "descripcion": "Auriculares con estética de los 80 pero tecnología moderna: Bluetooth 5.0 y cancelación de ruido.", "imagen": "auriculares.jpg"},
+    9: {"id": 9, "nombre": "Gorra RetroPulse Classic", "precio": 6000, "descripcion": "Gorra estilo trucker con el logotipo oficial de RetroPulse bordado en alta definición.", "imagen": "gorra.jpg"},
+    10: {"id": 10, "nombre": "Remera Algodón Pixel Art", "precio": 14000, "descripcion": "Remera 100% algodón con estampa premium de estética pixel art y colores vibrantes de larga duración.", "imagen": "remera.jpg"},
+    11: {"id": 11, "nombre": "Taza Cerámica Game Over", "precio": 4800, "descripcion": "Taza de cerámica importada con diseño termosensible que cambia de color al agregar líquido caliente.", "imagen": "taza.jpg"},
+    12: {"id": 12, "nombre": "Consola Mini Arcade Bartop", "precio": 85000, "descripcion": "Réplica a escala de una máquina arcade para mesa. Pantalla integrada y palanca clásica de alta respuesta.", "imagen": "mini_arcade.jpg"},
+    13: {"id": 13, "nombre": "Cable HDMI Mallado Premium", "precio": 3500, "descripcion": "Cable HDMI de alta velocidad con conector dorado y protección mallada para evitar interferencias.", "imagen": "cable_hdmi.jpg"},
+    14: {"id": 14, "nombre": "Kit Limpieza Consolas", "precio": 5500, "descripcion": "Kit especializado con alcohol isopropílico, cepillos antiestáticos y paño para mantener tus joyas retro impecables.", "imagen": "kit_limpieza.jpg"},
+    15: {"id": 15, "nombre": "Póster Neón Cyberpunk", "precio": 3800, "descripcion": "Póster satinado tamaño A3 con diseño retro-futurista e impresión de alta calidad para decorar tu habitación.", "imagen": "poster.jpg"}
+}
 
 @app.route('/')
-def home():
-    # Ahora le enviamos la LISTA COMPLETA de productos al HTML
-    return render_template('producto.html', productos=lista_productos)
+def index():
+    return render_template('index.html', productos=PRODUCTOS.values())
 
-if __name__ == '__main__':
-    import os
+@app.route('/producto/<int:id_producto>')
+def detalle(id_producto):
+    producto = PRODUCTOS.get(id_producto)
+    if not producto:
+        flash("¡Ups! Producto no encontrado", "error")
+        return redirect(url_for('index'))
+    return render_template('detalle.html', producto=producto)
+
+@app.route('/agregar/<int:id_producto>', methods=['POST'])
+def agregar_al_carrito(id_producto):
+    producto = PRODUCTOS.get(id_producto)
+    if producto:
+        if 'carrito' not in session:
+            session['carrito'] = []
+        
+        carrito = session['carrito']
+        carrito.append({
+            "id": producto["id"],
+            "nombre": producto["nombre"],
+            "precio": producto["precio"]
+        })
+        session['carrito'] = carrito
+        flash(f"{producto['nombre']} añadido al carrito.", "success")
+    
+    return redirect(url_for('index'))
+
+@app.route('/carrito')
+def ver_carrito():
+    items = session.get('carrito', [])
+    total = sum(item['precio'] for item in items)
+    return render_template('carrito.html', items=items, total=total)
+
+@app.route('/limpiar')
+def limpiar_carrito():
+    session.pop('carrito', None)
+    return redirect(url_for('ver_carrito'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Carrito - RetroPulse</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #1a1a1a; color: #fff; padding: 40px; max-width: 600px; margin: 0 auto;">
+
+    <a href="{{ url_for('index') }}" style="color: #00ffcc; text-decoration: none;">⬅ Seguir comprando</a>
+    <h1 style="border-bottom: 2px solid #00ffcc; padding-bottom: 10px;">🛒 Tu Carrito de Compras</h1>
+
+    {% if items %}
+        <ul style="list-style: none; padding: 0;">
+            {% for item in items %}
+                <li style="background-color: #2a2a2a; padding: 15px; margin-bottom: 10px; border-radius: 5px; border-left: 5px solid #ff0055; display: flex; justify-content: space-between;">
+                    <span>{{ item.nombre }}</span>
+                    <strong style="color: #00ffcc;">${{ item.precio }}</strong>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <div style="background-color: #2a2a2a; padding: 20px; border-radius: 5px; text-align: right; margin-top: 20px; border: 1px solid #444;">
+            <h2 style="margin: 0 0 15px 0;">💰 Total a pagar: <span style="color: #00ffcc;">${{ total }}</span></h2>
+            <a href="{{ url_for('limpiar_carrito') }}" style="color: #ff3333; text-decoration: none; font-size: 14px;">❌ Vaciar todo el carrito</a>
+        </div>
+    {% else %}
+        <p style="color: #aaa; font-style: italic; margin-top: 30px;">El carrito está vacío. ¡Navega y añade tus artículos retro!</p>
+    {% endif %}
+
+</body>
+</html>
